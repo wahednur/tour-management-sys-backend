@@ -9,4 +9,5 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   }
+  // "include": ["./src/app/interfaces/index.d.ts"]
 }
