@@ -35,5 +35,6 @@ router.delete(
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   TourController.deleteTourType
 );
+router.get("/:slug", TourController.getSingleTour);
 
 export const TourRoute = router;

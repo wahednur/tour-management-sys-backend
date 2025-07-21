@@ -5,35 +5,26 @@ import slugify from "slugify";
 export async function generateUniqueSlug(
   name: string,
   model: Model<any>,
-  suffix = "",
+  type?: string, // Optional type: e.g., 'division'
   field = "slug",
   currentId: string | null = null
 ): Promise<string> {
   const baseSlug = slugify(name, { lower: true, strict: true });
-  let slug = suffix ? `${baseSlug}${suffix}` : baseSlug;
+
+  // Add '-division' only if type is 'division'
+  const suffix = type === "division" ? "-division" : "";
+  let slug = `${baseSlug}${suffix}`;
   let counter = 1;
 
   let exists = await model.exists(
-    currentId
-      ? {
-          [field]: slug,
-          _id: { $ne: currentId },
-        }
-      : { [field]: slug }
+    currentId ? { [field]: slug, _id: { $ne: currentId } } : { [field]: slug }
   );
 
   while (exists) {
-    slug = suffix
-      ? `${baseSlug}${suffix}-${counter}`
-      : `${baseSlug}-${counter}`;
+    slug = `${baseSlug}${suffix ? `${suffix}-${counter}` : `-${counter}`}`;
     counter++;
     exists = await model.exists(
-      currentId
-        ? {
-            [field]: slug,
-            _id: { $ne: currentId },
-          }
-        : { [field]: slug }
+      currentId ? { [field]: slug, _id: { $ne: currentId } } : { [field]: slug }
     );
   }
 

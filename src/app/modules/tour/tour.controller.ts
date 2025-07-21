@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import StatusCodes from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sentResponse";
 import { TourServices } from "./tour.service";
@@ -15,7 +16,9 @@ const createTour = catchAsync(async (req: Request, res: Response) => {
 });
 const getAllTours = catchAsync(async (req: Request, res: Response) => {
   const query = req.query;
-  const result = await TourServices.getAllTours(query);
+  const result = await TourServices.getAllTours(
+    query as Record<string, string>
+  );
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -57,10 +60,23 @@ const deleteTourType = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleTour = catchAsync(async (req: Request, res: Response) => {
+  const slug = req.params.slug;
+  const tour = await TourServices.getSingleTour(slug);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: `${tour?.title}`,
+    data: tour,
+  });
+});
+
 export const TourController = {
   createTour,
   createTourType,
   updateTourType,
   deleteTourType,
   getAllTours,
+  getSingleTour,
 };
