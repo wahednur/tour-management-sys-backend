@@ -1,0 +1,53 @@
+import { model, Schema } from "mongoose";
+import { generateUniqueSlug } from "../../utils/generateUniqueSlug";
+import { ITour, ITourType } from "./tour.interface";
+
+const tourTypeSchema = new Schema<ITourType>(
+  {
+    name: { type: String, required: true, unique: true },
+  },
+  { timestamps: true }
+);
+
+export const TourType = model<ITourType>("TourType", tourTypeSchema);
+
+const tourSchema = new Schema<ITour>(
+  {
+    title: { type: String, required: true },
+    slug: { type: String, unique: true },
+    description: { type: String },
+    images: { type: [String], default: [] },
+    location: { type: String },
+    constForm: { type: Number },
+    startDate: { type: Date },
+    endDate: { type: Date },
+    included: { type: [String], default: [] },
+    excluded: { type: [String], default: [] },
+    amenities: { type: [String], default: [] },
+    tourPlan: { type: [String], default: [] },
+    maxGuest: { type: Number },
+    minAge: { type: Number },
+    division: {
+      type: Schema.Types.ObjectId,
+      ref: "Division",
+      required: true,
+    },
+    tourType: {
+      type: Schema.Types.ObjectId,
+      ref: "TourType",
+      required: true,
+    },
+    departureLocation: { type: String },
+    arrivalLocation: { type: String },
+  },
+  { timestamps: true }
+);
+
+tourSchema.pre("save", async function (next) {
+  if (this.isModified("title")) {
+    this.slug = await generateUniqueSlug(this.title, Tour, "slug");
+  }
+  next();
+});
+
+export const Tour = model<ITour>("Tour", tourSchema);
