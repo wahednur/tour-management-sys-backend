@@ -5,7 +5,7 @@ export const createTourZodSchema = z.object({
   description: z.string().optional(),
   images: z.array(z.string()),
   location: z.string().optional(),
-  costFrom: z.number().optional(),
+  costForm: z.number().optional(),
   startDate: z.string().optional().optional(),
   endDate: z.string().optional().optional(),
   tourType: z.string(), // <- changed here
@@ -24,7 +24,7 @@ export const updateTourZodSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
   location: z.string().optional(),
-  costFrom: z.number().optional(),
+  costForm: z.number().optional(),
   startDate: z.string().optional().optional(),
   endDate: z.string().optional().optional(),
   tourType: z.string().optional(), // <- changed here

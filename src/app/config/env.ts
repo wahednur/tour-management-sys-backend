@@ -27,6 +27,14 @@ const envSchema = z.object({
     .url("GOOGLE_CALLBACK_URL must be a valid URL"),
   EXPRESS_SESSION_SECRET: z.string(),
   FRONTEND_URL: z.string().url("FRONTEND_URL must be a valid URL"),
+  // Flattened SSL fields
+  SSL_STORE_ID: z.string(),
+  SSL_STORE_PASS: z.string(),
+  SSL_PAYMENT_API: z.string().url(),
+  SSL_VALIDATION_API: z.string().url(),
+  SSL_SUCCESS_URL: z.string().url(),
+  SSL_FAIL_URL: z.string().url(),
+  SSL_CANCEL_URL: z.string().url(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -37,7 +45,20 @@ if (!parsedEnv.success) {
   process.exit(1);
 }
 
-export const envVars = parsedEnv.data;
+const env = {
+  ...parsedEnv.data,
+  SSL: {
+    SSL_STORE_ID: parsedEnv.data.SSL_STORE_ID,
+    SSL_STORE_PASS: parsedEnv.data.SSL_STORE_PASS,
+    SSL_PAYMENT_API: parsedEnv.data.SSL_PAYMENT_API,
+    SSL_VALIDATION_API: parsedEnv.data.SSL_VALIDATION_API,
+    SSL_SUCCESS_URL: parsedEnv.data.SSL_SUCCESS_URL,
+    SSL_FAIL_URL: parsedEnv.data.SSL_FAIL_URL,
+    SSL_CANCEL_URL: parsedEnv.data.SSL_CANCEL_URL,
+  },
+};
+
+export const envVars = env;
 // interface EnvConfig {
 //   PORT: string;
 //   DB_URI: string;
@@ -54,6 +75,12 @@ export const envVars = parsedEnv.data;
 //   GOOGLE_CALLBACK_URL: string;
 //   EXPRESS_SESSION_SECRET: string;
 //   FRONTEND_URL: string;
+// SSL:{
+//   SSL_STORE_ID:string
+// SSL_STORE_PASS:string
+// SSL_PAYMENT_API:string
+// SSL_VALIDATION_API:string
+// }
 // }
 // const loadEnvVars = (): EnvConfig => {
 //   const requiredEnvVars: string[] = [
