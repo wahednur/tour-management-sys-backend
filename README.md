@@ -149,6 +149,25 @@ EXPRESS_SESSION_SECRET=express-session
 # Frontend URL
 FRONTEND_URL=http://localhost:5173
 
+
+# SSL commerz
+SSL_STORE_ID=your_store_ID
+SSL_STORE_PASS=Your_store_password
+SSL_PAYMENT_API=https://sandbox.sslcommerz.com/gwprocess/v3/api.php
+SSL_VALIDATION_API=https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php
+
+
+# SSL Commerz Frontend API
+SSL_SUCCESS_URL="http://localhost:5000/api/v1/payment/success"
+SSL_FAIL_URL="http://localhost:5000/api/v1/payment/fail"
+SSL_CANCEL_URL="http://localhost:5000/api/v1/payment/cancel"
+
+
+# CLOUDINARY
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
 ```
 
 ### Folder Structure
