@@ -2,10 +2,15 @@ import { Request, Response } from "express";
 import StatusCodes from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sentResponse";
+import { ITour } from "./tour.interface";
 import { TourServices } from "./tour.service";
 
 const createTour = catchAsync(async (req: Request, res: Response) => {
-  const result = await TourServices.createTour(req.body);
+  const payload: ITour = {
+    ...req.body,
+    images: (req.files as Express.Multer.File[]).map((file) => file.path),
+  };
+  const result = await TourServices.createTour(payload);
 
   sendResponse(res, {
     statusCode: 201,
