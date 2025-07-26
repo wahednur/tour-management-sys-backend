@@ -42,9 +42,25 @@ const createTourType = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateTour = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const payload: ITour = {
+    ...req.body,
+    images: (req.files as Express.Multer.File[]).map((file) => file.path),
+  };
+  const result = await TourServices.updateTour(id, payload);
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Tour updated successfully",
+    data: result,
+  });
+});
+
 const updateTourType = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name } = req.body;
+
   const result = TourServices.updateTourType(id, name);
   sendResponse(res, {
     statusCode: 201,
@@ -84,4 +100,5 @@ export const TourController = {
   deleteTourType,
   getAllTours,
   getSingleTour,
+  updateTour,
 };
