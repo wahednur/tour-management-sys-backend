@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
+import { deleteImgCloudinary } from "../config/cloudinary.config";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import { handleCastError } from "../errorHelpers/CastError";
@@ -10,12 +11,25 @@ import { handleValidationError } from "../errorHelpers/ValidationError";
 import { handleZodError } from "../errorHelpers/ZodError";
 import { TErrorSources } from "../interfaces/error.types";
 
-export const globalErrorHandler = (
+export const globalErrorHandler = async (
   err: any,
   req: Request,
   res: Response,
   nect: NextFunction
 ) => {
+  if (envVars.NODE_ENV === "development") {
+    console.log(err);
+  }
+  // Delete single cloudinary file
+  if (req.file) {
+    await deleteImgCloudinary(req.file.path);
+  }
+  if (req.files && Array(req.files) && req.files.length) {
+    const imageUrls = (req.files as Express.Multer.File[]).map(
+      (file) => file.path
+    );
+    await Promise.all(imageUrls.map((url) => deleteImgCloudinary(url)));
+  }
   const errorSources: TErrorSources[] = [];
   let statusCode = 500;
   let message = `Something went wrong!! ${err.message} from global error`;

@@ -2,11 +2,16 @@ import { Request, Response } from "express";
 import StatusCodes from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sentResponse";
+import { IDivision } from "./division.interface";
 import { Division } from "./division.model";
 import { DivisionService } from "./division.service";
 
 const createDivision = catchAsync(async (req: Request, res: Response) => {
-  const result = await Division.create(req.body);
+  const payload: IDivision = {
+    ...req.body,
+    thumbnail: req.file?.path,
+  };
+  const result = await Division.create(payload);
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
@@ -26,7 +31,11 @@ const geAllDivision = catchAsync(async (req: Request, res: Response) => {
 });
 const updateDivision = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
-  const result = await DivisionService.updateDivision(id, req.body);
+  const payload: IDivision = {
+    ...req.body,
+    thumbnail: req.file?.path,
+  };
+  const result = await DivisionService.updateDivision(id, payload);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

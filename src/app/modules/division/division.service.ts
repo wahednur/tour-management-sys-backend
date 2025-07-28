@@ -1,3 +1,4 @@
+import { deleteImgCloudinary } from "../../config/cloudinary.config";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { searchFields } from "./division.constant";
 import { IDivision } from "./division.interface";
@@ -35,6 +36,7 @@ const getAllDivision = async (query: Record<string, string> = {}) => {
 
 const updateDivision = async (id: string, payload: Partial<IDivision>) => {
   const existingDivision = await Division.findById(id);
+  console.log(payload);
   if (!existingDivision) {
     throw new Error("Division not found.");
   }
@@ -49,6 +51,9 @@ const updateDivision = async (id: string, payload: Partial<IDivision>) => {
     new: true,
     runValidators: true,
   });
+  if (payload.thumbnail && existingDivision.thumbnail) {
+    await deleteImgCloudinary(existingDivision.thumbnail);
+  }
   return updateDiv;
 };
 

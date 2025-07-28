@@ -1,4 +1,5 @@
 import express from "express";
+import { multerUpload } from "../../config/multer.config";
 import { checkAuth } from "../../middlewares/checkAtuth";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { Role } from "../user/user.interface";
@@ -7,12 +8,14 @@ import {
   createTourTypeZodSchema,
   createTourZodSchema,
   updateTourTypeZodSchema,
+  updateTourZodSchema,
 } from "./tour.validation";
 const router = express.Router();
 
 router.post(
   "/create",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.array("files"),
   validateRequest(createTourZodSchema),
   TourController.createTour
 );
@@ -24,11 +27,19 @@ router.post(
   validateRequest(createTourTypeZodSchema),
   TourController.createTourType
 );
+
 router.patch(
   "/tour-type/:id",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(updateTourTypeZodSchema),
   TourController.updateTourType
+);
+router.patch(
+  "/update/:id",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  multerUpload.array("files"),
+  validateRequest(updateTourZodSchema),
+  TourController.updateTour
 );
 router.delete(
   "/tour-type/:id",

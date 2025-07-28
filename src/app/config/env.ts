@@ -35,6 +35,11 @@ const envSchema = z.object({
   SSL_SUCCESS_URL: z.string().url(),
   SSL_FAIL_URL: z.string().url(),
   SSL_CANCEL_URL: z.string().url(),
+
+  //Coudinary
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -55,6 +60,11 @@ const env = {
     SSL_SUCCESS_URL: parsedEnv.data.SSL_SUCCESS_URL,
     SSL_FAIL_URL: parsedEnv.data.SSL_FAIL_URL,
     SSL_CANCEL_URL: parsedEnv.data.SSL_CANCEL_URL,
+  },
+  CLOUDINARY: {
+    CLOUDINARY_CLOUD_NAME: parsedEnv.data.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: parsedEnv.data.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: parsedEnv.data.CLOUDINARY_API_SECRET,
   },
 };
 
